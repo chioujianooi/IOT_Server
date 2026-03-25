@@ -6,3 +6,10 @@ find_package(mysocket REQUIRED)
 
 add_executable(server main.cpp)
 target_link_libraries(server mylibs::mysocket)
+
+
+add_custom_command(TARGET server POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:mylibs::mysocket>
+        $<TARGET_FILE_DIR:server>
+)

@@ -6,7 +6,7 @@ int main() {
     ServerSocket server;
     server.create();
     std::string ip="192.168.56.1";
-    server.customBind(8080,ip.c_str(),ip.length());
+    server.customBind(8080,ip.c_str(),static_cast<int>(ip.length()));
     server.customListen(5);
     auto client = server.customAccept();
 
