@@ -1,0 +1,18 @@
+# Modbus Server Initial Data Configuration
+# Format: type,address,value
+# Types:
+#   HR  - Holding Register (address 0-124, value 0-65535)
+#   CO  - Coil             (address 0-1999, value 0 or 1)
+
+# Holding registers
+HR,0,100
+HR,1,200
+HR,2,300
+HR,3,0
+HR,4,0
+
+# Coils
+CO,0,1
+CO,1,0
+CO,2,1
+CO,3,0

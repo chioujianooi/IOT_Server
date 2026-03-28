@@ -4,7 +4,12 @@ project(iotServer VERSION 1.0)
 
 find_package(mysocket REQUIRED)
 
-add_executable(server main.cpp)
+add_executable(server
+    main.cpp
+    src/modbus_server.cpp
+    src/data_store.cpp
+)
+target_include_directories(server PRIVATE include)
 target_link_libraries(server mylibs::mysocket)
 
 
