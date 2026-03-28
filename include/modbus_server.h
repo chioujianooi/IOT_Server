@@ -26,6 +26,7 @@ private:
 
     std::vector<uint8_t> handleReadCoils          (const MbapHeader&, const uint8_t* pdu, int pduLen);
     std::vector<uint8_t> handleReadHoldingRegs    (const MbapHeader&, const uint8_t* pdu, int pduLen);
+    std::vector<uint8_t> handleReadInputRegs      (const MbapHeader&, const uint8_t* pdu, int pduLen);
     std::vector<uint8_t> handleWriteSingleReg     (const MbapHeader&, const uint8_t* pdu, int pduLen);
     std::vector<uint8_t> handleWriteMultipleRegs  (const MbapHeader&, const uint8_t* pdu, int pduLen);
 

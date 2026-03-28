@@ -2,6 +2,7 @@
 # Format: type,address,value
 # Types:
 #   HR  - Holding Register (address 0-124, value 0-65535)
+#   IR  - Input Register   (address 0-124, value 0-65535, read-only via FC 0x04)
 #   CO  - Coil             (address 0-1999, value 0 or 1)
 
 # Holding registers
@@ -10,6 +11,11 @@ HR,1,200
 HR,2,300
 HR,3,0
 HR,4,0
+
+# Input registers (read-only sensor data)
+IR,0,1234
+IR,1,5678
+IR,2,910
 
 # Coils
 CO,0,1

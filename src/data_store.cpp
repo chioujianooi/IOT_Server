@@ -49,8 +49,14 @@ bool DataStore::loadFromFile(const std::string& path) {
                 continue;
             }
             coils[addr] = (val != 0);
+        } else if (type == "IR") {
+            if (addr < 0 || addr >= MAX_INPUT_REGS) {
+                std::cerr << "config.txt line " << lineNum << ": IR address " << addr << " out of range\n";
+                continue;
+            }
+            inputRegisters[addr] = static_cast<uint16_t>(val);
         } else {
-            std::cerr << "config.txt line " << lineNum << ": unknown type \"" << type << "\" (use HR or CO)\n";
+            std::cerr << "config.txt line " << lineNum << ": unknown type \"" << type << "\" (use HR, IR, or CO)\n";
         }
     }
 

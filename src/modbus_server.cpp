@@ -73,6 +73,7 @@ std::vector<uint8_t> ModbusServer::processRequest(const uint8_t* data, int size)
     switch (fc) {
         case 0x01: return handleReadCoils         (hdr, pdu, pduLen);
         case 0x03: return handleReadHoldingRegs   (hdr, pdu, pduLen);
+        case 0x04: return handleReadInputRegs     (hdr, pdu, pduLen);
         case 0x06: return handleWriteSingleReg    (hdr, pdu, pduLen);
         case 0x10: return handleWriteMultipleRegs (hdr, pdu, pduLen);
         default:
@@ -133,6 +134,35 @@ std::vector<uint8_t> ModbusServer::handleReadHoldingRegs(
     std::vector<uint8_t> pduResp = { 0x03, byteCount };
     for (uint16_t i = 0; i < quantity; ++i) {
         uint16_t val = store_.holdingRegisters[startAddr + i];
+        pduResp.push_back(static_cast<uint8_t>(val >> 8));
+        pduResp.push_back(static_cast<uint8_t>(val & 0xFF));
+    }
+
+    auto mbap = buildMbap(hdr, static_cast<uint16_t>(pduResp.size()));
+    mbap.insert(mbap.end(), pduResp.begin(), pduResp.end());
+    return mbap;
+}
+
+// ── 0x04 Read Input Registers ────────────────────────────────────────────────
+
+std::vector<uint8_t> ModbusServer::handleReadInputRegs(
+    const MbapHeader& hdr, const uint8_t* pdu, int pduLen)
+{
+    if (pduLen < 5)
+        return buildException(hdr, 0x04, EX_ILLEGAL_VALUE);
+
+    uint16_t startAddr = readU16BE(pdu + 1);
+    uint16_t quantity  = readU16BE(pdu + 3);
+
+    if (quantity == 0 || quantity > 125)
+        return buildException(hdr, 0x04, EX_ILLEGAL_VALUE);
+    if (startAddr + quantity > DataStore::MAX_INPUT_REGS)
+        return buildException(hdr, 0x04, EX_ILLEGAL_ADDRESS);
+
+    uint8_t byteCount = static_cast<uint8_t>(quantity * 2);
+    std::vector<uint8_t> pduResp = { 0x04, byteCount };
+    for (uint16_t i = 0; i < quantity; ++i) {
+        uint16_t val = store_.inputRegisters[startAddr + i];
         pduResp.push_back(static_cast<uint8_t>(val >> 8));
         pduResp.push_back(static_cast<uint8_t>(val & 0xFF));
     }
